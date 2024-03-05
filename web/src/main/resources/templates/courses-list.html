@@ -1,0 +1,75 @@
+<html
+        xmlns:th="http://thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:sec="http://www.w3.org/1999/xhtml"
+        layout:decorate="~{layout}">
+
+<!-- Page Header-->
+<head>
+    <title>Courses List</title>
+</head>
+<!-- Main Content-->
+<body>
+<main  class="container px-4 px-lg-5">
+    <section  layout:fragment="body">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+        <div th:if="${param.success}" class="alert alert-success">
+            You've registered successfully!
+        </div>
+
+        <div class="col-md-10 col-lg-8 col-xl-7" >
+            <div th:each="role : ${#authentication.getAuthorities()}" th:if="${role.authority} == 'STUDENT'">
+                <form th:action="@{/courses/search}" class="form-inline my-2 my-lg-0 mb-3">
+                    <input name="query" class="form-control mr-sm-2 mb-5" type="search" placeholder="Search courses" aria-label="Search">
+                </form>
+            </div>
+            <!-- Post preview-->
+
+            <div th:each="course :${courses}" th:if="${user.id} == ${course.createdBy.id}" >
+                <a th:href="@{/courses/{courseId}(courseId=${course.ID})}">
+                    <h2 th:text="${course.title}" class="post-title">Man must explore, and this is exploration at its greatest</h2>
+                    <h4 th:text="${course.content}" class="post-subtitle">Problems look mighty small from 150 miles up</h4>
+
+
+                </a>
+                <div th:if="${user} != null" >
+                    <div th:if="${user.id} == ${course.createdBy.id}" >
+                        <a class="btn btn-primary" th:href="@{/courses/{courseId}/edit(courseId=${course.ID})}">EDIT</a>
+                    </div>
+                </div>
+
+                <a sec:authorize="isAuthenticated()" >
+<!--                    Authenticated as <span sec:authentication="name"></span>-->
+                    <span th:each="role : ${#authentication.getAuthorities()}" th:if="${role.authority} == 'STUDENT'">
+                        <a class="btn btn-primary"  th:href="@{/courses/{courseId}(courseId=${course.ID})}">SUBSCRIBE</a>
+
+                    </span>
+                </a>
+
+            </div>
+
+
+            <div th:each="course :${courses}" class="post-preview mb-3" >
+                <div th:each="role : ${#authentication.getAuthorities()}" th:if="${role.authority} == 'STUDENT'">
+                <div>
+                <a th:href="@{/courses/{courseId}(courseId=${course.ID})}">
+                    <h2 th:text="${course.title}" class="post-title">Man must explore, and this is exploration at its greatest</h2>
+                    <h4 th:text="${course.content}" >Problems look mighty small from 150 miles up</h4>
+                </a>
+                </div>
+                <a sec:authorize="isAuthenticated()" >
+                    <!--                    Authenticated as <span sec:authentication="name"></span>-->
+                    <span>
+                        <a class="btn btn-primary"  th:href="@{/courses/{courseId}(courseId=${course.ID})}">VIEW COURSE</a>
+
+                    </span>
+                </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    </section>
+</main>
+
+</body>
+</html>

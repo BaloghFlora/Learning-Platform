@@ -1,0 +1,111 @@
+<html
+        xmlns:th="http://thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+
+<!-- Page Header-->
+<head>
+    <title>Courses Create</title>
+</head>
+<!-- Main Content-->
+<body layout:fragment="body">
+<main  class="row gx-4 gx-lg-5 justify-content-center">
+    <section>
+        <header>
+            <div class="container position-relative px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <div class="post-heading" >
+                            <h1 th:text = "${course.title}">Man must explore, and this is exploration at its greatest</h1>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <article class="mb-4">
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <h2 th:text = "${course.content}">Never in all their history have men been able truly to conceive of the world as one: a single sphere, a globe, having the qualities of a globe, a round earth in which all the directions eventually meet, in which there is no center because every point, or none, is center — an equal earth which all men occupy as equals. The airman's earth, if free men make it, will be truly round: a globe in practice, not in theory.</h2>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <div class="row gx-4 gx-lg-5">
+            <!-- Loop through lectures and create columns for each lecture -->
+            <div th:each="lecture, iterStat : ${course.lectures}" class="col-md-4 mb-5">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h2 class="card-title" th:text="${lecture.name}">Card One</h2>
+<!--                        <a th:href="@{lecture.materialLink}" target="_blank"></a>-->
+                        <p class="card-text">Open the following link for the lecture material : </p>
+                        <p class="card-text" th:text="${lecture.materialLink}">Open the following link for the lecture material : </p>
+                    </div>
+
+                    <a class="btn btn-primary" th:href="@{${lecture.materialLink}}">
+                        Open File
+                    </a>
+
+
+
+                    <div th:if="${user.id} == ${course.createdBy.id}" >
+                        <a class="btn btn-sm btn-secondary" th:href="@{/lectures/{lectureId}/edit(lectureId=${lecture.ID})}">EDIT</a>
+                        <a class="btn btn-sm btn-secondary" th:href="@{/lectures/{lectureId}/delete(lectureId=${lecture.ID})}">Delete</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div  th:if="${user.id} == ${course.createdBy.id}"  class="row justify-content-center">
+            <a class="btn btn-primary btn-lg" th:href="@{/lectures/{courseId}/new(courseId=${course.ID})}">Add new lecture</a>
+        </div>
+
+    </section>
+
+</main>
+<div>
+    <div  th:if="${user.id} == ${course.createdBy.id}"  class="row justify-content-center">
+        <a class="btn btn-sm btn-secondary" th:href="@{/courses/{courseId}/delete(courseId=${course.ID})}">Delete this course</a>
+    </div>
+
+</div>
+<!-- Display comments-->
+<div class="comments-section">
+
+    <div th:each="comment : ${comments}" class="comment">
+        <div class="card h-100">
+        <div class="bubble">
+            <h3 th:text="${comment.text}" class="card-text"></h3>
+            <p>Written by: <span th:text="${comment.writtenBy.username}"></span></p>
+            <!-- Delete button for the comment author -->
+            <div th:if="${comment.writtenBy.id == user.id}">
+                <a th:href="@{/comments/{commentId}/update(commentId=${comment.commentId})}" class="btn btn-sm btn-warning">Edit</a>
+                <form th:action="@{/comments/{commentId}/delete(commentId=${comment.commentId})}" method="post">
+                    <button type="submit" class="btn btn-sm btn-danger">Delete Comment</button>
+                </form>
+            </div>
+        </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Comment form -->
+<form role="form" th:action="@{/courses/{courseId}/comments(courseId=${course.ID})}" method="post">
+    <div class="mb-3">
+        <label for="comment">
+            <h3>
+                Leave a comment:
+            </h3>
+        </label>
+        <textarea class="form-control" id="comment" name="text" rows="3"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit Comment</button>
+</form>
+
+</div>
+</body>
+</html>

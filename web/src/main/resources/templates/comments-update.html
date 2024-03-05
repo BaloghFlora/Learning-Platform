@@ -1,0 +1,22 @@
+<html
+        xmlns:th="http://thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+<head>
+    <title>Comments Edit</title>
+</head>
+<body class="d-flex flex-column h-100">
+<main class="flex-shrink-0">
+    <section layout:fragment="body" class="py-5">
+        <!-- Comment update form -->
+        <form th:action="@{/comments/{commentId}/update(commentId=${comment.commentId})}" method="post" th:object="${comment}">
+            <div class="mb-3">
+                <label for="comment">Edit your comment:</label>
+                <textarea class="form-control" id="comment" name="text" rows="3" th:text="${comment.text}"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Update Comment</button>
+        </form>
+    </section>
+</main>
+</body>
+</html>

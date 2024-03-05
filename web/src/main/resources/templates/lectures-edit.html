@@ -1,0 +1,45 @@
+<html
+        xmlns:th="http://thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+<head>
+    <title>Lectures Edit</title>
+</head>
+<body class="d-flex flex-column h-100">
+<main class="flex-shrink-0">
+    <section layout:fragment="body" class="py-5">
+        <div class="container">
+            <form role="form" method="post" th:action="@{/lectures/{lectureId}/edit(lectureId=${lectureId})}" th:object="${lecture}">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="name">Name</label>
+                        <input
+                                type="text"
+                                class="form-control"
+                                id="name"
+                                name="name"
+                                th:field="*{name}"
+                                placeholder="Title">
+                        <p th:if="${#fields.hasErrors('name')}" class="text-danger" th:errors="*{name}"></p>
+                    </div>
+
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="materialLink">Example file input</label>
+                    <div class="input-group">
+                        <div class="custom-file" enctype="multipart/form-data" >
+                            <input type="file" class="custom-file-input" id="materialLink" name="materialLink" th:field="*{materialLink}">
+                            <label class="custom-file-label" for="materialLink">Choose file</label>
+                        </div>
+                        <!-- Add a hidden input for the file path -->
+                    </div>
+                </div>
+
+
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </section>
+</main>
+</body>
+</html>
